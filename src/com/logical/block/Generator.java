@@ -13,4 +13,14 @@ public class Generator extends Block {
 	public void performLogic() {
 	}
 
+	@Override
+	public int getWidthHint() {
+		return 3;
+	}	
+	
+	@Override
+	public int getHeightHint() {
+		return 1;
+	}
+		
 }

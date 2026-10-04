@@ -12,10 +12,19 @@ public class EditorPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = -4915329519814787797L;
 
+	public static boolean showGrid = false;
+	
 	public EditorPanel() {
 		this.setLayout(new BorderLayout());
-		this.add(new EditorPlaygroundPanel());
-		this.add(new JButton("NOT HTML"), BorderLayout.SOUTH);
+		JPanel playgroundPanel = new EditorPlaygroundPanel();
+		this.add(playgroundPanel);
+		
+		JButton gridButton = new JButton("Show Grid");
+		gridButton.addActionListener(_ -> {
+			showGrid = !showGrid;
+			playgroundPanel.repaint();
+		});
+		this.add(gridButton, BorderLayout.SOUTH);
 	}
 
 }

@@ -39,20 +39,65 @@ public abstract class Block {
 			input.update();
 		}
 	}
-	
+
 	public String name() {
 		return name;
 	}
-	
+
 	public Output[] outputs() {
 		return outputs;
 	}
-	
+
 	public Input[] inputs() {
 		return inputs;
-	}	
+	}
 
 	public abstract void performLogic();
+
+	/**
+	 * <p>
+	 * Value for the related component that gives a hint on the block width. This is
+	 * in block grid unit.
+	 * </p>
+	 * 
+	 * <p>
+	 * A value of zero (or less) is considered as no hint.
+	 * </p>
+	 * 
+	 * <p>
+	 * Note that this value is a <em>hint</em>, meaning that the component is not
+	 * forced to use this value. For example, if the name is too long for the hinted
+	 * width, the actual width will be increased.
+	 * </p>
+	 * 
+	 * @return the width hint
+	 */
+	public int getWidthHint() {
+		return 0;
+	}
+
+	/**
+	 * <p>
+	 * Value for the related component that gives a hint on the block height. This
+	 * is in block grid unit.
+	 * </p>
+	 * 
+	 * <p>
+	 * A value of zero (or less) is considered as no hint and the component will
+	 * compute it.
+	 * </p>
+	 * 
+	 * <p>
+	 * Note that this value is a <em>hint</em>, meaning that the component is not
+	 * forced to use this value. For example, if there is more input (or output)
+	 * than the UI component can hold, the actual height will be increased.
+	 * </p>
+	 * 
+	 * @return the height hint
+	 */
+	public int getHeightHint() {
+		return 0;
+	}
 
 	// TODO Change index by name
 	public void connectTo(Block other, int inputIndex, int outputIndex) {
