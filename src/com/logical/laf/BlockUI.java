@@ -12,11 +12,9 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
-import javax.swing.event.MouseInputAdapter;
 import javax.swing.plaf.ComponentUI;
 
 import com.logical.gui.block.GraphicalBlock;

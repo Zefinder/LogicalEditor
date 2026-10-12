@@ -1,6 +1,5 @@
 package com.logical.gui.element;
 
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -26,18 +25,14 @@ public class BlockMouseListener extends MouseAdapter {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// Save mouse and block coordinates for delta computation
-		Point mouseScreenLocation = e.getLocationOnScreen();
-		beforeDraggedMouseScreenX = mouseScreenLocation.x;
-		beforeDraggedMouseScreenY = mouseScreenLocation.y;
-
-		Point blockLocation = block.getLocation();
-		beforeDraggedBlockX = blockLocation.x;
-		beforeDraggedBlockY = blockLocation.y;
+		beforeDraggedMouseScreenX = e.getXOnScreen();
+		beforeDraggedMouseScreenY = e.getYOnScreen();
+		beforeDraggedBlockX = block.getX();
+		beforeDraggedBlockY = block.getY();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		System.out.println("AAAAAAAAAAA\n");
 		block.setDragged(false);
 		block.repaint();
 	}

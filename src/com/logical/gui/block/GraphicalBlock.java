@@ -33,6 +33,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 
 	public static final int TOP_INSET = 3;
 	private static final int BOTTOM_INSET = 3;
+	private static final int NEXT_GRID_CLIP_THRESHOLD = EditorPlaygroundPanel.BLOCK_GRID_SIZE / 2;
 
 	private final Block block;
 
@@ -197,11 +198,33 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 	}
 
 	public void setDragged(boolean dragged) {
+		boolean changed = this.dragged ^ dragged;
 		this.dragged = dragged;
-		if (!dragged) {
-			// Clip to closest x and y
-			this.doLayout();
+		if (changed && !dragged) {
+			clipToClosestGrid();
 		}
+	}
+
+	private void clipToClosestGrid() {
+		// Compute grid number and remainder to check where to clip
+		int x = getX() + InputUI.MAX_X;
+		int newGridX = x / gridSize;
+		int xGridRemainder = x - newGridX * gridSize;
+		if (xGridRemainder > NEXT_GRID_CLIP_THRESHOLD) {
+			newGridX++;
+		}
+
+		int y = getY() + TOP_INSET;
+		int newGridY = y / gridSize;
+		int yGridRemainder = y - newGridY * gridSize;
+		if (yGridRemainder > NEXT_GRID_CLIP_THRESHOLD) {
+			newGridY++;
+		}
+
+		// Update and force new layout
+		gridX = newGridX;
+		gridY = newGridY;
+		doLayout();
 	}
 
 	@Override
