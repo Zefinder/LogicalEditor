@@ -43,9 +43,9 @@ public class BlockUI extends LogicalEditorUI {
 
 	@Override
 	protected void installListeners(JComponent c) {
-		c.addMouseListener(new BlockMouseListener((GraphicalBlock) c) {
-			
-		});
+		MouseAdapter mouseAdapter = new BlockMouseListener((GraphicalBlock) c);
+		c.addMouseListener(mouseAdapter);
+		c.addMouseMotionListener(mouseAdapter);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class BlockUI extends LogicalEditorUI {
 		GraphicalBlock b = (GraphicalBlock) c;
 		return new Dimension(b.gridWidth() * b.gridSize(), b.gridHeight() * b.gridSize());
 	}
-
+	
 	public void paint(Graphics g, JComponent c) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		GraphicalBlock gBlock = (GraphicalBlock) c;

@@ -4,6 +4,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
+import java.awt.Rectangle;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,8 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 	private List<Optional<GraphicalInput>> inputLocations;
 	private List<Optional<GraphicalOutput>> outputLocations;
 
+	private boolean dragged;
+
 	public GraphicalBlock(int gridX, int gridY, Block block) {
 		this.block = block;
 		this.gridSize = EditorPlaygroundPanel.BLOCK_GRID_SIZE;
@@ -72,13 +75,12 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 		this.gridX = gridX;
 		this.gridY = gridY;
 
-		// Check height of component to check if it is because of that
+		// Test border
 //		this.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		// Create panels for inputs and outputs
 		Input[] inputs = block.inputs();
 		this.inputs = new GraphicalInput[inputs.length];
-//		int inputGridX = gridX * EditorPlaygroundPanel.BLOCK_GRID_SUBDIVISION_NUMBER;
 		for (int i = 0; i < inputs.length; i++) {
 			GraphicalInput input = new GraphicalInput(inputs[i], 0);
 			this.inputs[i] = input;
@@ -87,7 +89,6 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 
 		Output[] outputs = block.outputs();
 		this.outputs = new GraphicalOutput[outputs.length];
-//		int outputGridX = (gridX + gridWidth) * EditorPlaygroundPanel.BLOCK_GRID_SUBDIVISION_NUMBER;
 		for (int i = 0; i < outputs.length; i++) {
 			GraphicalOutput output = new GraphicalOutput(outputs[i],
 					gridWidth * EditorPlaygroundPanel.BLOCK_GRID_SUBDIVISION_NUMBER);
@@ -144,6 +145,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 			output.setGridY(outputGridY++);
 		}
 
+		this.dragged = false;
 	}
 
 	public int gridX() {
@@ -190,11 +192,31 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 		return subgridWidth;
 	}
 
+	public boolean isDragged() {
+		return dragged;
+	}
+
+	public void setDragged(boolean dragged) {
+		this.dragged = dragged;
+		if (!dragged) {
+			// Clip to closest x and y
+			this.doLayout();
+		}
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		// TODO Put in if
+		int x = isDragged() ? getX() : gridX * gridSize;
+		int y = isDragged() ? getY() : gridY * gridSize;
+
+		return new Rectangle(x - InputUI.MAX_X, y - TOP_INSET, gridWidth * gridSize + InputUI.MAX_X + OutputUI.MAX_X,
+				gridHeight * gridSize + TOP_INSET + BOTTOM_INSET);
+	}
+
 	@Override
 	public void doLayout() {
-		this.setBounds(gridX * gridSize - InputUI.MAX_X, gridY * gridSize - TOP_INSET,
-				gridWidth * gridSize + InputUI.MAX_X + OutputUI.MAX_X,
-				gridHeight * gridSize + TOP_INSET + BOTTOM_INSET);
+		this.setBounds(this.getBounds());
 	}
 
 	public int getLeftRectXOffset() {
