@@ -1,6 +1,8 @@
 package com.logical.block;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public abstract class Block {
@@ -12,6 +14,8 @@ public abstract class Block {
 	private final String name;
 	private final Input[] inputs;
 	private final Output[] outputs;
+	private final Map<String, Input> nameToInput;
+	private final Map<String, Output> nameToOutput;
 
 	public Block(String name, String[] inputs, String[] outputs) {
 		this.id = ID_SUPPLIER.get();
@@ -19,12 +23,17 @@ public abstract class Block {
 		this.inputs = new Input[inputs.length];
 		this.outputs = new Output[outputs.length];
 
+		nameToInput = new HashMap<String, Input>();
+		nameToOutput = new HashMap<String, Output>();
+
 		for (int i = 0; i < inputs.length; i++) {
 			this.inputs[i] = new Input(inputs[i]);
+			nameToInput.put(inputs[i], this.inputs[i]);
 		}
 
 		for (int i = 0; i < outputs.length; i++) {
 			this.outputs[i] = new Output(outputs[i]);
+			nameToOutput.put(outputs[i], this.outputs[i]);
 		}
 	}
 
@@ -46,6 +55,24 @@ public abstract class Block {
 
 	public Output[] outputs() {
 		return outputs;
+	}
+
+	public Input getInput(String name) {
+		if (!nameToInput.containsKey(name)) {
+			System.err.println("Cannot get input for %s: name %s does not exist".formatted(this.toString(), name));
+			return null;
+		}
+
+		return nameToInput.get(name);
+	}
+
+	public Output getOutput(String name) {
+		if (!nameToOutput.containsKey(name)) {
+			System.err.println("Cannot get output for %s: name %s does not exist".formatted(this.toString(), name));
+			return null;
+		}
+
+		return nameToOutput.get(name);
 	}
 
 	public Input[] inputs() {
@@ -100,53 +127,55 @@ public abstract class Block {
 	}
 
 	// TODO Change index by name
-	public void connectTo(Block other, int inputIndex, int outputIndex) {
+	public void connectTo(Block other, String inputName, String outputName) {
 		if (other == null) {
 			System.err.println("Cannot connect wire to null block!");
 			return;
 		}
 
 		// Check if input and output exist
-		if (outputIndex >= this.outputs.length) {
-			System.err.println("Cannot set output wire for %s: index %d out of bounds".formatted(this.toString()));
+		if (!this.nameToOutput.containsKey(outputName)) {
+			System.err.println(
+					"Cannot set output wire for %s: name %s does not exist".formatted(this.toString(), outputName));
 			return;
 		}
-		Output output = this.outputs[outputIndex];
+		Output output = nameToOutput.get(outputName);
 
-		if (inputIndex >= other.inputs.length) {
-			System.err.println("Cannot set input wire for %s: index %d out of bounds".formatted(other.toString()));
+		if (!other.nameToInput.containsKey(inputName)) {
+			System.err.println(
+					"Cannot set input wire for %s: name %s does not exist".formatted(other.toString(), inputName));
 			return;
 		}
-		Input input = other.inputs[inputIndex];
+		Input input = other.nameToInput.get(inputName);
 
 		// Check if output already has a wire, else create and assign it
 		Wire outputWire = output.wire();
 		if (outputWire == Wire.NO_WIRE) {
-			outputWire = new Wire();
+			outputWire = new Wire(output, input);
 			output.setWire(outputWire);
 		}
 
 		input.setWire(outputWire);
 	}
 
-	// TODO Change index by name
-	protected State getInputState(int index) {
-		if (index >= this.inputs.length) {
-			System.err.println("Cannot get input state for %s: index %d out of bounds".formatted(this.toString()));
+	protected State getInputState(String name) {
+		if (!nameToInput.containsKey(name)) {
+			System.err
+					.println("Cannot get input state for %s: name %s does not exist".formatted(this.toString(), name));
 			return State.OPEN;
 		}
 
-		return inputs[index].state();
+		return nameToInput.get(name).state();
 	}
 
-	// TODO Change index by name
-	protected void setOutputState(int index, State state) {
-		if (index >= this.outputs.length) {
-			System.err.println("Cannot set output state for %s: index %d out of bounds".formatted(this.toString()));
+	protected void setOutputState(String name, State state) {
+		if (!nameToOutput.containsKey(name)) {
+			System.err
+					.println("Cannot set output state for %s: name %s does not exist".formatted(this.toString(), name));
 			return;
 		}
 
-		outputs[index].setState(state);
+		nameToOutput.get(name).setState(state);
 	}
 
 	@Override

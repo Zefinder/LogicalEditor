@@ -19,6 +19,10 @@ public class Output {
 		this.wire = Wire.NO_WIRE;
 		this.state = State.OPEN;
 	}
+	
+	public String name() {
+		return name;
+	}
 
 	public void setWire(Wire wire) {
 		if (wire == null) {

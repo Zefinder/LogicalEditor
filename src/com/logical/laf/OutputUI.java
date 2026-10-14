@@ -5,19 +5,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 
 import com.logical.gui.element.GraphicalOutput;
+import com.logical.gui.element.OutputMouseListener;
 
 public class OutputUI extends LogicalEditorUI {
 
 	public static final String uiClassID = "OutputUI";
 	public static final String PROPERTY_PREFIX = "Output.";
-
+	
 	public static final int SIDE_LENGTH = 10;
 	private static final int[] TRIANGLE_X = { 0, (int) Math.sqrt((SIDE_LENGTH * 1.5) * (SIDE_LENGTH * 0.5)), 0 };
 	private static final int[] TRIANGLE_Y = { 0, SIDE_LENGTH / 2, SIDE_LENGTH };
@@ -38,7 +39,9 @@ public class OutputUI extends LogicalEditorUI {
 
 	@Override
 	protected void installListeners(JComponent c) {
-		// Set mouse listener
+		MouseAdapter mouseAdapter = new OutputMouseListener((GraphicalOutput) c);
+		c.addMouseListener(mouseAdapter);
+		c.addMouseMotionListener(mouseAdapter);
 	}
 
 	@Override
@@ -54,10 +57,9 @@ public class OutputUI extends LogicalEditorUI {
 	public void paint(Graphics g, JComponent c) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		GraphicalOutput gOutput = (GraphicalOutput) c;
-		Insets insets = gOutput.getInsets();
 
-		int x = gOutput.getInternalX() + insets.left;
-		int y = gOutput.getInternalY() + insets.top;
+		int x = gOutput.getX();
+		int y = gOutput.getY();
 
 		// Draw arrow
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -67,7 +69,7 @@ public class OutputUI extends LogicalEditorUI {
 		g2d.drawLine(x + TRIANGLE_X[0], y + TRIANGLE_Y[0], x + TRIANGLE_X[1], y + TRIANGLE_Y[1]);
 		g2d.drawLine(x + TRIANGLE_X[1], y + TRIANGLE_Y[1], x + TRIANGLE_X[2], y + TRIANGLE_Y[2]);
 	}
-
+	
 	@Override
 	protected String getPropertyPrefix() {
 		return PROPERTY_PREFIX;

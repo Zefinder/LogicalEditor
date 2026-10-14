@@ -1,11 +1,17 @@
 package com.logical.gui.element;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
+import java.awt.Rectangle;
 import java.awt.event.ItemListener;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.ComponentUI;
 
 import com.logical.block.Input;
@@ -26,11 +32,15 @@ public class GraphicalInput extends JComponent implements ItemSelectable {
 
 	// Cache grid size
 	private int gridSize;
+	
+	private String text;
 
 	public GraphicalInput(Input input, int internalGridX) {
 		this.internalGridX = internalGridX;
 		this.internalGridY = 0;
 		this.gridSize = EditorPlaygroundPanel.INOUT_GRID_SIZE;
+		
+		this.text = input.name();
 
 		updateUI();
 	}
@@ -57,11 +67,37 @@ public class GraphicalInput extends JComponent implements ItemSelectable {
 
 	public void setGridY(int gridY) {
 		this.internalGridY = gridY;
+		this.setBorder(new LineBorder(Color.blue));
 	}
 
+	protected void paintBorder(Graphics g) {
+		Border border = getBorder();
+		if (border != null) {
+			border.paintBorder(this, g, getX(), getY(), getWidth(), getHeight());
+		}
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	
 	@Override
 	public Insets getInsets() {
 		return new Insets(-InputUI.SIDE_LENGTH / 2 + GraphicalBlock.TOP_INSET, InputUI.MAX_X, 0, 0);
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+		Dimension size = getPreferredSize();
+		Insets insets = getInsets();
+		return new Rectangle(getInternalX() + insets.left, getInternalY() + insets.top, size.width, size.height);
+	}
+
+	@Override
+	public void doLayout() {
+		this.setBounds(getBounds());
+		repaint();
 	}
 
 	@Override

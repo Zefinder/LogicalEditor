@@ -1,5 +1,6 @@
 package com.logical.gui.block;
 
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Insets;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
@@ -32,6 +34,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 	private static final long serialVersionUID = 8832677813671858741L;
 
 	public static final int TOP_INSET = 3;
+	public static final int LEFT_INSET = InputUI.MAX_X;
 	private static final int BOTTOM_INSET = 3;
 	private static final int NEXT_GRID_CLIP_THRESHOLD = EditorPlaygroundPanel.BLOCK_GRID_SIZE / 2;
 
@@ -77,7 +80,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 		this.gridY = gridY;
 
 		// Test border
-//		this.setBorder(BorderFactory.createLineBorder(Color.black));
+		this.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		// Create panels for inputs and outputs
 		Input[] inputs = block.inputs();
@@ -252,7 +255,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 
 	@Override
 	public Insets getInsets() {
-		return new Insets(TOP_INSET, InputUI.MAX_X, BOTTOM_INSET, OutputUI.MAX_X);
+		return new Insets(TOP_INSET, LEFT_INSET, BOTTOM_INSET, OutputUI.MAX_X);
 	}
 
 	@Override

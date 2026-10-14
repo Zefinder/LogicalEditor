@@ -20,6 +20,10 @@ public class Input {
 		this.state = State.OPEN;
 	}
 
+	public String name() {
+		return name;
+	}
+
 	public void setWire(Wire wire) {
 		if (wire == null) {
 			System.err.println("Trying to set null to Input");

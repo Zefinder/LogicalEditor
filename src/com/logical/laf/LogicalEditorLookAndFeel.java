@@ -30,6 +30,7 @@ public class LogicalEditorLookAndFeel extends MetalLookAndFeel {
 		table.put(BlockUI.uiClassID, BlockUI.class.getName());
 		table.put(InputUI.uiClassID, InputUI.class.getName());
 		table.put(OutputUI.uiClassID, OutputUI.class.getName());
+		table.put(WireUI.uiClassID, WireUI.class.getName());
 	}
 	
 	@Override

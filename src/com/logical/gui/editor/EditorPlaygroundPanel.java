@@ -5,16 +5,21 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
 
 import com.logical.block.Block;
 import com.logical.block.Generator;
 import com.logical.block.Sensor;
+import com.logical.block.Wire;
 import com.logical.gui.block.GraphicalBlock;
+import com.logical.gui.element.GraphicalOutput;
+import com.logical.gui.element.GraphicalWire;
 
-public class EditorPlaygroundPanel extends JPanel {
+public class EditorPlaygroundPanel extends JLayeredPane {
 
 	/**
 	 * 
@@ -25,8 +30,13 @@ public class EditorPlaygroundPanel extends JPanel {
 	public static final int BLOCK_GRID_SUBDIVISION_NUMBER = 2;
 	public static final int BLOCK_GRID_SIZE = BLOCK_GRID_SUBDIVISION_NUMBER * INOUT_GRID_SIZE;
 
-//	private final List<GraphicalElement> elements;
+	public static final int BLOCK_PANE = 0;
+	public static final int WIRE_PANE = 1;
+
 	private final List<GraphicalBlock> blocks;
+	private final Map<Block, GraphicalBlock> blockToGraphical;
+	private final List<GraphicalWire> wires;
+	private int gridX = 0;
 	private int gridY = 0;
 
 	/**
@@ -35,23 +45,42 @@ public class EditorPlaygroundPanel extends JPanel {
 	 */
 	public EditorPlaygroundPanel() {
 		blocks = new ArrayList<GraphicalBlock>();
+		blockToGraphical = new HashMap<Block, GraphicalBlock>();
+		wires = new ArrayList<GraphicalWire>();
 		// Set absolute positioning and white background
 		this.setLayout(null);
 		this.setBackground(Color.white);
 
+		Generator generator = new Generator();
+		Sensor sensor = new Sensor();
+		generator.connectTo(sensor, Sensor.IN_NAME, Generator.OUT_NAME);
+
 		// TODO Remove when tests finished
-		gridY = 2;
-		addBlock(new Generator());
-		gridY = 4;
-		addBlock(new Sensor());
+		gridY = 3;
+		gridX = 2;
+		addBlock(generator);
+		gridX = 8;
+		addBlock(sensor);
+
+		addWire(new Wire(generator.getOutput(Generator.OUT_NAME), sensor.getInput(Sensor.IN_NAME)));
 	}
 
 	public void addBlock(Block block) {
-//		GraphicalBlock graphicalBlock = GraphicalBlock.addBlockToComponent(this, block, 3, 2);
-		GraphicalBlock graphicalBlock = new GraphicalBlock(3, gridY, block);
-		this.add(graphicalBlock);
+		GraphicalBlock graphicalBlock = new GraphicalBlock(gridX, gridY, block);
+		this.add(graphicalBlock, BLOCK_PANE, 0);
 		blocks.add(graphicalBlock);
+		blockToGraphical.put(block, graphicalBlock);
 		graphicalBlock.doLayout();
+	}
+
+	public void addWire(Wire wire) {
+		
+		GraphicalWire graphicalWire = new GraphicalWire(wire);
+		this.add(graphicalWire, WIRE_PANE, 0);
+		wires.add(graphicalWire);
+		graphicalWire.doLayout();
+		System.out.println(graphicalWire.getSize());
+		System.out.println(graphicalWire.getLocation());
 	}
 
 	// Only to show the grid for test purpose

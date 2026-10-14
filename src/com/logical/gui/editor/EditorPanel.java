@@ -3,6 +3,7 @@ package com.logical.gui.editor;
 import java.awt.BorderLayout;
 
 import javax.swing.JButton;
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class EditorPanel extends JPanel {
@@ -16,7 +17,7 @@ public class EditorPanel extends JPanel {
 	
 	public EditorPanel() {
 		this.setLayout(new BorderLayout());
-		JPanel playgroundPanel = new EditorPlaygroundPanel();
+		JLayeredPane playgroundPanel = new EditorPlaygroundPanel();
 		this.add(playgroundPanel);
 		
 		JButton gridButton = new JButton("Show Grid");

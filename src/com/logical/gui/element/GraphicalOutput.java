@@ -1,11 +1,17 @@
 package com.logical.gui.element;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
+import java.awt.Rectangle;
 import java.awt.event.ItemListener;
 
 import javax.swing.JComponent;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.plaf.ComponentUI;
 
 import com.logical.block.Output;
@@ -27,10 +33,13 @@ public class GraphicalOutput extends JComponent implements ItemSelectable {
 	// Cache grid size
 	private int gridSize;
 
+	private String text;
+
 	public GraphicalOutput(Output output, int internalGridX) {
 		this.internalGridX = internalGridX;
 		this.internalGridY = 0;
 		this.gridSize = EditorPlaygroundPanel.INOUT_GRID_SIZE;
+		this.text = output.name();
 
 		updateUI();
 	}
@@ -57,11 +66,37 @@ public class GraphicalOutput extends JComponent implements ItemSelectable {
 
 	public void setGridY(int gridY) {
 		this.internalGridY = gridY;
+		doLayout();
+		this.setBorder(new LineBorder(Color.red));
+	}
+
+	protected void paintBorder(Graphics g) {
+		Border border = getBorder();
+		if (border != null) {
+			border.paintBorder(this, g, getX(), getY(), getWidth(), getHeight());
+		}
+	}
+
+	public String getText() {
+		return text;
 	}
 
 	@Override
 	public Insets getInsets() {
-		return new Insets(-OutputUI.SIDE_LENGTH / 2 + GraphicalBlock.TOP_INSET, OutputUI.MAX_X, 0, 0);
+		return new Insets(-OutputUI.SIDE_LENGTH / 2 + GraphicalBlock.TOP_INSET, GraphicalBlock.LEFT_INSET, 0, 0);
+	}
+
+	@Override
+	public Rectangle getBounds() {
+		Dimension size = getPreferredSize();
+		Insets insets = getInsets();
+		return new Rectangle(getInternalX() + insets.left, getInternalY() + insets.top, size.width, size.height);
+	}
+
+	@Override
+	public void doLayout() {
+		this.setBounds(getBounds());
+		repaint();
 	}
 
 	@Override
@@ -80,17 +115,19 @@ public class GraphicalOutput extends JComponent implements ItemSelectable {
 
 	@Override
 	public Object[] getSelectedObjects() {
-		return null;
+		Object[] items = new Object[1];
+		items[0] = text;
+		return items;
 	}
 
 	@Override
 	public void addItemListener(ItemListener l) {
-
+		listenerList.add(ItemListener.class, l);
 	}
 
 	@Override
 	public void removeItemListener(ItemListener l) {
-
+		listenerList.remove(ItemListener.class, l);
 	}
 
 	@Override
