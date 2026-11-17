@@ -25,8 +25,10 @@ public class BlockUI extends LogicalEditorUI {
 	public static final String uiClassID = "BlockUI";
 	public static final String PROPERTY_PREFIX = "Block.";
 
+	public static final int LINE_STROKE = 2;
+	private static final int COORDS_SHIFT = LINE_STROKE / 2;
+	
 	// Same rectangles for every blocks, update each time you will paint
-	private static Rectangle componentRect = new Rectangle();
 	private static Rectangle viewRect = new Rectangle();
 	private static Rectangle textRect = new Rectangle();
 
@@ -113,17 +115,12 @@ public class BlockUI extends LogicalEditorUI {
 	private String layout(GraphicalBlock b, FontMetrics fm, int width, int height) {
 		// Compute using insets (based on BasicButtonUI)
 		Insets i = b.getInsets();
-		componentRect.x = 0;
-		componentRect.y = 0;
-		componentRect.width = width;
-		componentRect.height = height;
+        viewRect.x = i.left;
+        viewRect.y = i.top;
+        viewRect.width = width - (i.right + viewRect.x);
+        viewRect.height = height - (i.bottom + viewRect.y);
 
-		viewRect.x = i.left;
-		viewRect.y = i.top;
-		viewRect.width = width - (i.right + viewRect.x);
-		viewRect.height = height - (i.bottom + viewRect.y);
-
-		textRect.x = textRect.y = textRect.width = textRect.height = 0;
+        textRect.x = textRect.y = textRect.width = textRect.height = 0;
 
 		// Layout text using SwingUtilities: no icon and text is not null, also
 		// alignment is always center

@@ -9,7 +9,7 @@ public class Wire {
 	private static int CURRENT_ID = 0;
 	private static final Supplier<Integer> ID_SUPPLIER = () -> CURRENT_ID++;
 
-	private final Output output;
+//	private final Output output;
 	private final String name;
 	private final Map<String, Input> nameToInput;
 
@@ -27,11 +27,13 @@ public class Wire {
 
 	private State state;
 
-	public Wire(Output output, Input... inputs) {
+//	public Wire(Output output, Input... inputs) {
+	public Wire(String name, Input... inputs) {
 		this.id = ID_SUPPLIER.get();
 		this.state = State.OPEN;
-		this.output = output;
-		this.name = output.name();
+//		this.output = output;
+//		this.name = output.name();
+		this.name = name;
 		this.nameToInput = new HashMap<String, Input>();
 		for (Input input : inputs) {
 			addInput(input);

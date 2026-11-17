@@ -35,7 +35,7 @@ public class GraphicalOutput extends JComponent implements ItemSelectable {
 
 	private String text;
 
-	public GraphicalOutput(Output output, int internalGridX) {
+	public GraphicalOutput(GraphicalBlock block, Output output, int internalGridX) {
 		this.internalGridX = internalGridX;
 		this.internalGridY = 0;
 		this.gridSize = EditorPlaygroundPanel.INOUT_GRID_SIZE;
@@ -81,10 +81,10 @@ public class GraphicalOutput extends JComponent implements ItemSelectable {
 		return text;
 	}
 
-	@Override
-	public Insets getInsets() {
-		return new Insets(-OutputUI.SIDE_LENGTH / 2 + GraphicalBlock.TOP_INSET, GraphicalBlock.LEFT_INSET, 0, 0);
-	}
+//	@Override
+//	public Insets getInsets() {
+//		return new Insets(-OutputUI.SIDE_LENGTH / 2 + GraphicalBlock.TOP_INSET, GraphicalBlock.LEFT_INSET, 0, 0);
+//	}
 
 	@Override
 	public Rectangle getBounds() {

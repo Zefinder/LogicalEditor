@@ -151,7 +151,7 @@ public abstract class Block {
 		// Check if output already has a wire, else create and assign it
 		Wire outputWire = output.wire();
 		if (outputWire == Wire.NO_WIRE) {
-			outputWire = new Wire(output, input);
+			outputWire = new Wire(output.name(), input);
 			output.setWire(outputWire);
 		}
 

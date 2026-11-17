@@ -2,7 +2,6 @@ package com.logical.gui.block;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.ItemSelectable;
 import java.awt.Rectangle;
@@ -33,9 +32,9 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 	 */
 	private static final long serialVersionUID = 8832677813671858741L;
 
-	public static final int TOP_INSET = 3;
-	public static final int LEFT_INSET = InputUI.MAX_X;
-	private static final int BOTTOM_INSET = 3;
+//	public static final int TOP_INSET = 3;
+//	public static final int LEFT_INSET = InputUI.MAX_X;
+//	private static final int BOTTOM_INSET = 3;
 	private static final int NEXT_GRID_CLIP_THRESHOLD = EditorPlaygroundPanel.BLOCK_GRID_SIZE / 2;
 
 	private final Block block;
@@ -80,24 +79,24 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 		this.gridY = gridY;
 
 		// Test border
-		this.setBorder(BorderFactory.createLineBorder(Color.black));
+//		this.setBorder(BorderFactory.createLineBorder(Color.black));
 
 		// Create panels for inputs and outputs
 		Input[] inputs = block.inputs();
 		this.inputs = new GraphicalInput[inputs.length];
 		for (int i = 0; i < inputs.length; i++) {
-			GraphicalInput input = new GraphicalInput(inputs[i], 0);
+			GraphicalInput input = new GraphicalInput(this, inputs[i], 0);
 			this.inputs[i] = input;
-			this.add(input);
+//			this.add(input);
 		}
 
 		Output[] outputs = block.outputs();
 		this.outputs = new GraphicalOutput[outputs.length];
 		for (int i = 0; i < outputs.length; i++) {
-			GraphicalOutput output = new GraphicalOutput(outputs[i],
+			GraphicalOutput output = new GraphicalOutput(this, outputs[i],
 					gridWidth * EditorPlaygroundPanel.BLOCK_GRID_SUBDIVISION_NUMBER);
 			this.outputs[i] = output;
-			this.add(output);
+//			this.add(output);
 		}
 
 		// Set UI
@@ -210,14 +209,14 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 
 	private void clipToClosestGrid() {
 		// Compute grid number and remainder to check where to clip
-		int x = getX() + InputUI.MAX_X;
+		int x = getX();
 		int newGridX = x / gridSize;
 		int xGridRemainder = x - newGridX * gridSize;
 		if (xGridRemainder > NEXT_GRID_CLIP_THRESHOLD) {
 			newGridX++;
 		}
 
-		int y = getY() + TOP_INSET;
+		int y = getY();
 		int newGridY = y / gridSize;
 		int yGridRemainder = y - newGridY * gridSize;
 		if (yGridRemainder > NEXT_GRID_CLIP_THRESHOLD) {
@@ -236,8 +235,10 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 		int x = isDragged() ? getX() : gridX * gridSize;
 		int y = isDragged() ? getY() : gridY * gridSize;
 
-		return new Rectangle(x - InputUI.MAX_X, y - TOP_INSET, gridWidth * gridSize + InputUI.MAX_X + OutputUI.MAX_X,
-				gridHeight * gridSize + TOP_INSET + BOTTOM_INSET);
+//		return new Rectangle(x - InputUI.MAX_X, y - TOP_INSET, gridWidth * gridSize + InputUI.MAX_X + OutputUI.MAX_X,
+//				gridHeight * gridSize + TOP_INSET + BOTTOM_INSET);
+		return new Rectangle(x - BlockUI.LINE_STROKE, y - BlockUI.LINE_STROKE,
+				gridWidth * gridSize + 2 * BlockUI.LINE_STROKE, gridHeight * gridSize + 2 * BlockUI.LINE_STROKE);
 	}
 
 	@Override
@@ -255,7 +256,7 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 
 	@Override
 	public Insets getInsets() {
-		return new Insets(TOP_INSET, LEFT_INSET, BOTTOM_INSET, OutputUI.MAX_X);
+		return new Insets(BlockUI.LINE_STROKE, BlockUI.LINE_STROKE, BlockUI.LINE_STROKE, BlockUI.LINE_STROKE);
 	}
 
 	@Override
@@ -278,18 +279,18 @@ public class GraphicalBlock extends JComponent implements ItemSelectable {
 	 * they need to be painted at the same time with their parents, so using paint
 	 * method.
 	 */
-	@Override
-	protected void paintChildren(Graphics g) {
-		// Draw inputs first
-		for (GraphicalInput input : inputs) {
-			input.paint(g);
-		}
-
-		// Draw outputs then
-		for (GraphicalOutput output : outputs) {
-			output.paint(g);
-		}
-	}
+//	@Override
+//	protected void paintChildren(Graphics g) {
+//		// Draw inputs first
+//		for (GraphicalInput input : inputs) {
+//			input.paint(g);
+//		}
+//
+//		// Draw outputs then
+//		for (GraphicalOutput output : outputs) {
+//			output.paint(g);
+//		}
+//	}
 
 	@Override
 	public Object[] getSelectedObjects() {

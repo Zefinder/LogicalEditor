@@ -61,8 +61,8 @@ public class EditorPlaygroundPanel extends JLayeredPane {
 		addBlock(generator);
 		gridX = 8;
 		addBlock(sensor);
-
-		addWire(new Wire(generator.getOutput(Generator.OUT_NAME), sensor.getInput(Sensor.IN_NAME)));
+//
+//		addWire(new Wire(generator.getOutput(Generator.OUT_NAME), sensor.getInput(Sensor.IN_NAME)));
 	}
 
 	public void addBlock(Block block) {
@@ -73,15 +73,15 @@ public class EditorPlaygroundPanel extends JLayeredPane {
 		graphicalBlock.doLayout();
 	}
 
-	public void addWire(Wire wire) {
-		
-		GraphicalWire graphicalWire = new GraphicalWire(wire);
-		this.add(graphicalWire, WIRE_PANE, 0);
-		wires.add(graphicalWire);
-		graphicalWire.doLayout();
-		System.out.println(graphicalWire.getSize());
-		System.out.println(graphicalWire.getLocation());
-	}
+//	public void addWire(Wire wire) {
+//		
+//		GraphicalWire graphicalWire = new GraphicalWire(wire);
+//		this.add(graphicalWire, WIRE_PANE, 0);
+//		wires.add(graphicalWire);
+//		graphicalWire.doLayout();
+//		System.out.println(graphicalWire.getSize());
+//		System.out.println(graphicalWire.getLocation());
+//	}
 
 	// Only to show the grid for test purpose
 	@Override
